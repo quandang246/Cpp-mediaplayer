@@ -42,7 +42,6 @@ FolderList::~FolderList()
 FolderList::FolderList(const fs::path &directory)
 {
     file_count = 0;
-    std::cout << "Audio/Video file in folder/subfolder: " << std::endl;
     for (const auto &entry : fs::recursive_directory_iterator(directory))
     {
         if (fs::is_regular_file(entry.path()))

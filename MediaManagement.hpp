@@ -1,8 +1,12 @@
 #ifndef MEDIAMANAGEMENT_HPP
 #define MEDIAMANAGEMENT_HPP
 
-#include <filesystem>
+#include <string>
 #include <iostream>
+#include <limits.h>
+#include <unistd.h>
+#include <cstring> // Include for strrchr
+#include <filesystem> // Include for std::filesystem::path
 #include "PlayList.hpp"
 #include "FolderList.hpp"
 
@@ -31,16 +35,15 @@ public:
     void view_all_PL();
     // Update playlist
     void update_PL();
+
+    // std::filesystem::path getexepath()
+    std::filesystem::path getexepath();
 };
 
 MediaManagement::MediaManagement()
 {
-    std::string dirStr;
-    std::cout << "Please enter directory: ";
-    std::getline(std::cin, dirStr); // Read entire line as string
-    // Example input: ...\mock_prj\testing
-    fs::path dir(dirStr); // Convert string to fs::path
-    folderList = FolderList(dir);
+    
+    folderList = FolderList(getexepath());
 }
 
 MediaManagement::~MediaManagement()
@@ -139,6 +142,21 @@ void MediaManagement::update_PL()
     } else {
         std::cout << "Invalid playlist index!" << std::endl;
     }
+}
+
+std::filesystem::path MediaManagement::getexepath() {
+    char result[PATH_MAX];
+    ssize_t count = readlink("/proc/self/exe", result, PATH_MAX);
+    if (count != -1) {
+        result[count] = '\0'; // Null-terminate the string
+        // Find the last occurrence of '/' in the path
+        char *lastSlash = strrchr(result, '/');
+        if (lastSlash != nullptr) {
+            *(lastSlash + 1) = '\0'; // Null-terminate at the position of the last '/'
+            return std::filesystem::path(result);
+        }
+    }
+    return ""; // Return an empty path if there's an error or no '/'
 }
 
 #endif
