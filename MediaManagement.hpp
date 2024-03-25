@@ -22,6 +22,7 @@ public:
     MediaManagement();
     ~MediaManagement();
 
+    MediaManagement(std::string path);
     // Folder function
     // Media files in that folder and all sub-folder (audio and video)
     void view_folder_list();
@@ -36,14 +37,14 @@ public:
     // Update playlist
     void update_PL();
 
-    // std::filesystem::path getexepath()
-    std::filesystem::path getexepath();
 };
 
-MediaManagement::MediaManagement()
+MediaManagement::MediaManagement(std::string path)
 {
+    std::filesystem::path programPath(path);
     
-    folderList = FolderList(getexepath());
+    folderList = FolderList(programPath);
+    std::cout << "Current working directory : " << programPath << std::endl;
 }
 
 MediaManagement::~MediaManagement()
@@ -144,6 +145,7 @@ void MediaManagement::update_PL()
     }
 }
 
+/*
 std::filesystem::path MediaManagement::getexepath() {
     char result[PATH_MAX];
     ssize_t count = readlink("/proc/self/exe", result, PATH_MAX);
@@ -158,5 +160,6 @@ std::filesystem::path MediaManagement::getexepath() {
     }
     return ""; // Return an empty path if there's an error or no '/'
 }
+*/
 
 #endif
