@@ -26,10 +26,9 @@ public:
 
     // get file_count
     int get_file_count();
-
-    // display
-    void display();
-
+    
+    // get file
+    File* get_file (int i);
 };
 
 #endif

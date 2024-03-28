@@ -3,18 +3,62 @@
 MediaManagement::MediaManagement(std::string path)
 {
     std::filesystem::path programPath(path);
-    
+
     folderList = FolderList(programPath);
     std::cout << "Current working directory : " << programPath << std::endl;
+}
+
+MediaManagement::MediaManagement()
+{
 }
 
 MediaManagement::~MediaManagement()
 {
 }
 
-void MediaManagement::view_folder_list()
+void MediaManagement::run()
 {
-    folderList.display();
+    while (true)
+    {
+        std::cout << "0 - Exit." << std::endl;
+        std::cout << "1 - View Media files in that folder and all sub-folder (audio and video)" << std::endl;
+        std::cout << "2 - Create new playlist" << std::endl;
+        std::cout << "3 - Delete a playlist" << std::endl;
+        std::cout << "4 - view all playlist" << std::endl;
+        std::cout << "5 - Update playlist" << std::endl;
+
+        int choice;
+        std::cout << "Please enter your's choice: ";
+        std::cin >> choice;
+
+        // Clearing the input buffer
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+        switch (choice)
+        {
+        case 0:
+            return;
+        case 1:
+            view_all_FL();
+            break;
+        case 2:
+            createPL();
+            break;
+        case 3:
+            deletePL();
+            break;
+        case 4:
+            view_all_PL();
+            break;
+        case 5:
+            update_PL();
+            break;
+        default:
+            std::cout << "Invalid input, please try again!" << std::endl;
+            break;
+        }
+    }
 }
 
 void MediaManagement::createPL()
@@ -63,7 +107,7 @@ void MediaManagement::update_PL()
     std::cin >> PL_id;
     if (PL_id >= 0 && PL_id < PlayLists.size())
     {
-        PlayList* edit_PL = &PlayLists[PL_id];
+        PlayList *edit_PL = &PlayLists[PL_id];
 
         std::cout << "Editing " << PL_id << " - " << edit_PL->get_PL_name() << std::endl;
 
@@ -101,8 +145,28 @@ void MediaManagement::update_PL()
                 break;
             }
         }
-    } else {
+    }
+    else
+    {
         std::cout << "Invalid playlist index!" << std::endl;
+    }
+}
+
+void MediaManagement::view_all_FL()
+{
+    if (folderList.get_file_count() <= 0)
+    {
+        std::cout << "Current working folder does not have any audio/video files. Please try again!" << std::endl;
+    }
+    else
+    {
+        std::cout << "Media files in that folder and all sub-folder (audio and video): " << std::endl;
+        for (int i = 0; i < folderList.get_file_count(); i++)
+        {
+            std::cout << "Index: " << i << std::endl;
+            std::cout << "File: " << folderList.get_file(i)->get_filePath() << std::endl;
+        }
+        std::cout << "Total: " << folderList.get_file_count() << std::endl;
     }
 }
 

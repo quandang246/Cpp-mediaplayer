@@ -33,21 +33,6 @@ bool File::isVideoFile(const fs::path &filePath)
     return extension == ".mp4" || extension == ".avi" || extension == ".mkv" || extension == ".mov";
 }
 
-void File::play()
-{
-    std::cout << "File is playing!" << std::endl;
-}
-
-void File::pause()
-{
-    std::cout << "File paused!" << std::endl;
-}
-
-void File::displayTimeDuration()
-{
-    std::cout << "File TimeDuration!" << std::endl;
-}
-
 fs::path File::get_filePath()
 {
     return filePath;

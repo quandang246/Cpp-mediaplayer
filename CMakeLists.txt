@@ -7,14 +7,15 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 configure_file(mediaConfig.h.in mediaConfig.h)
 
-add_subdirectory(media_lib)
+include_directories(src)
+
+add_subdirectory(src)
 
 add_executable(${PROJECT_NAME} main.cpp)
 
-target_link_libraries(${PROJECT_NAME} PUBLIC media_lib)
+target_link_libraries(${PROJECT_NAME} Controller Module)
 
 target_include_directories(${PROJECT_NAME} PUBLIC 
-                        "${PROJECT_BINARY_DIR}"
-                        "${PROJECT_SOURCE_DIR}/media_lib")
+                        "${PROJECT_BINARY_DIR}")
 
 install(TARGETS media DESTINATION bin)

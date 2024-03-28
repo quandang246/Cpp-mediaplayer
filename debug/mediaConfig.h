@@ -1,0 +1,7 @@
+#ifndef MEDIACONFIG_H
+#define MEDIACONFIG_H
+
+#define MEDIA_VERSION_MAJOR 1
+#define MEDIA_VERSION_MINOR 0
+
+#endif // MEDIACONFIG_H
