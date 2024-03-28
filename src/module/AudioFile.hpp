@@ -15,14 +15,6 @@ public:
     // Parameter constructor
     AudioFile(fs::path path, int m);
 
-    // play function
-    void play ();
-
-    // pause function
-    void pause ();
-
-    // displayTimeDuration function
-    void displayTimeDuration();
 };
 
 #endif

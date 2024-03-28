@@ -72,40 +72,6 @@ void PlayList::display()
     }
 }
 
-void PlayList::playPL()
-{
-    int PLsize = Files.size();
-    for (int i = current_index; i < PLsize; i++)
-    {
-        Files[current_index]->play();
-    }
-}
-
-void PlayList::pausePL()
-{
-    Files[current_index]->pause();
-}
-
-void PlayList::next()
-{
-    Files[current_index]->pause();
-    current_index++;
-    Files[current_index]->play();
-}
-
-void PlayList::previous()
-{
-    Files[current_index]->pause();
-    current_index--;
-    Files[current_index]->play();
-}
-
-void PlayList::displayTimeDuration()
-{
-    std::cout << "Time: " << std::endl;
-    std::cout << "Duration: " << std::endl;
-}
-
 std::string PlayList::get_PL_name()
 {
     return PL_name;

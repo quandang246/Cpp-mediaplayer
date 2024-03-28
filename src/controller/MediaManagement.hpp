@@ -7,8 +7,8 @@
 #include <unistd.h>
 #include <cstring> // Include for strrchr
 #include <filesystem> // Include for std::filesystem::path
-#include "PlayList.hpp"
-#include "FolderList.hpp"
+#include "../module/PlayList.hpp"
+#include "../module/FolderList.hpp"
 
 namespace fs = std::filesystem;
 
@@ -23,9 +23,9 @@ public:
     ~MediaManagement();
 
     MediaManagement(std::string path);
-    // Folder function
-    // Media files in that folder and all sub-folder (audio and video)
-    void view_folder_list();
+    
+    // Run program function
+    void run();
 
     // Playlist function
     // Create new playlist
@@ -37,6 +37,10 @@ public:
     // Update playlist
     void update_PL();
 
+
+    //Folder function
+    // view all folderlist
+    void view_all_FL();
 };
 
 #endif

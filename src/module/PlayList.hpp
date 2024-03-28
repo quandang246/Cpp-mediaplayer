@@ -28,22 +28,7 @@ public:
     void removeFile();
     // display list
     void display();
-
-    // play function
-    void playPL();
-
-    // pause function
-    void pausePL();
-
-    // next function
-    void next();
-
-    // previous function
-    void previous();
-
-    // display time and duration function
-    void displayTimeDuration();
-
+    
     // get PL_name;
     std::string get_PL_name();
 };

@@ -14,15 +14,6 @@ public:
 
     // Parameter constructor
     VideoFile(fs::path path, int m);
-
-    // play function
-    void play ();
-
-    // pause function
-    void pause ();
-
-    // displayTimeDuration function
-    void displayTimeDuration();
 };
 
 #endif

@@ -20,15 +20,6 @@ public:
     // Parameter constructor
     File(fs::path directory);
 
-    // play function
-    void play();
-
-    // pause function
-    void pause();
-
-    // displayTimeDuration function
-    void displayTimeDuration();
-
     static bool isAudioFile(const fs::path &filePath);
     static bool isVideoFile(const fs::path &filePath);
 

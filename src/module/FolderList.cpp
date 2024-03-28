@@ -2,7 +2,6 @@
 
 FolderList::FolderList()
 {
-
 }
 
 FolderList::~FolderList()
@@ -37,12 +36,7 @@ int FolderList::get_file_count(){
     return  file_count;
 }
 
-void FolderList::display()
+File* FolderList::get_file(int i)
 {
-    std::cout << "Media files in that folder and all sub-folder (audio and video): " << std::endl;
-    for (int i = 0; i < file_count; i++) {
-        std::cout << "Index: " << i << std::endl;
-        std::cout << "File: " << Files[i]->get_filePath() << std::endl;
-    }
-    std::cout << "Total: " << file_count << std::endl;
+    return Files[i];
 }
