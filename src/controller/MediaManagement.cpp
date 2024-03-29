@@ -163,8 +163,33 @@ void MediaManagement::view_all_FL()
         std::cout << "Media files in that folder and all sub-folder (audio and video): " << std::endl;
         for (int i = 0; i < folderList.get_file_count(); i++)
         {
-            std::cout << "Index: " << i << std::endl;
-            std::cout << "File: " << folderList.get_file(i)->get_filePath() << std::endl;
+            if (folderList.get_file(i)->get_isAV())
+            {
+                std::cout   << "Index: " << i << std::endl;
+                std::cout   << "Audio " << " - "  
+                            << "Track_name: " << folderList.get_file(i)->getName() << " - " 
+                            << "Album: " << folderList.get_file(i)->getAlbum() << " - " 
+                            << "Artist: " << folderList.get_file(i)->getArtist() << " - " 
+                            << "Genre: " << folderList.get_file(i)->getGenre() << " - " 
+                            << "Publish_Year: " << folderList.get_file(i)->getPublish_Year() << " - " 
+                            << "Duration: " << folderList.get_file(i)->getDuration() << " - " 
+                            << std::endl;
+                            
+                std::cout << "File_path: " << folderList.get_file(i)->get_filePath() << std::endl;
+            }
+            else if (!folderList.get_file(i)->get_isAV())
+            {
+                std::cout   << "Index: " << i << std::endl;
+                std::cout   << "Video " << " - "  
+                            << "Name: " << folderList.get_file(i)->getName() << " - " 
+                            << "Codec: " << folderList.get_file(i)->getCodec() << " - " 
+                            << "Size: " << folderList.get_file(i)->getSize() << " - " 
+                            << "Bitrate: " << folderList.get_file(i)->getBitrate() << " - " 
+                            << "Duration: " << folderList.get_file(i)->getDuration() << " - " 
+                            << std::endl;
+                            
+                std::cout << "File_path: " << folderList.get_file(i)->get_filePath() << std::endl;
+            }
         }
         std::cout << "Total: " << folderList.get_file_count() << std::endl;
     }

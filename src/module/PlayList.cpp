@@ -24,13 +24,13 @@ void PlayList::addFile()
         File *new_file = nullptr;
         if (File::isAudioFile(path))
         {
-            new_file = new VideoFile(path, 30);
+            new_file = new VideoFile(path);
             Files.push_back(new_file);
             
         }
         else if (File::isVideoFile(path))
         {
-            new_file = new AudioFile(path, 30);
+            new_file = new AudioFile(path);
             Files.push_back(new_file);
         }
         else
