@@ -18,13 +18,13 @@ FolderList::FolderList(const fs::path &directory)
             File *new_file = nullptr;
             if (File::isAudioFile(entry.path()))
             {
-                new_file = new VideoFile(entry.path(), 30);
+                new_file = new VideoFile(entry.path());
                 Files.push_back(new_file);
                 file_count++;
             }
             else if (File::isVideoFile(entry.path()))
             {
-                new_file = new AudioFile(entry.path(), 30);
+                new_file = new AudioFile(entry.path());
                 Files.push_back(new_file);
                 file_count++;
             }

@@ -6,15 +6,24 @@
 class AudioFile : public File
 {
 private:
-    int metadata;
+    TagLib::String Track_name, Album, Artist, Genre; 
+    unsigned int Publish_Year;
+    int Duration;
 public:
     // Default constructor and destructor
     AudioFile();
     ~AudioFile();
 
     // Parameter constructor
-    AudioFile(fs::path path, int m);
+    AudioFile(fs::path path);
 
+    //getter
+    TagLib::String getName();
+    TagLib::String getAlbum();
+    TagLib::String getArtist();
+    TagLib::String getGenre(); 
+    unsigned int getPublish_Year();
+    int getDuration();
 };
 
 #endif
