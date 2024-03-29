@@ -4,11 +4,11 @@ This is a CLI (Command Line Interface) application written in C++ for Linux syst
 
 ## Requirements
 
-- Linux Operating System
-- Compiler C++20
+- Linux Operating System (Currently, I'm using Ubuntu 20.04)
+- Compiler C++20 (Maybe C++17 can also work)
 - Taglib Library
 - SDL2 Library
-- CMake 3.16++ 
+- CMake (Currently, I'm using CMake 3.16.3)
 
 ## Installation
 
@@ -18,10 +18,21 @@ This is a CLI (Command Line Interface) application written in C++ for Linux syst
     git clone https://github.com/quandang246/Cpp-mediaplayer.git
     ```
 
+2. Compile the taglib:
+
+    ```bash
+    cd path-to-taglib
+    mkdir build
+    cd build/
+    cmake -S .. -B .
+    make
+    sudo make install 
+    ```
+
 2. Navigate to the project directory:
 
     ```bash
-    cd Cpp-mediaplayer
+    cd path-to-Cpp-mediaplayer
     ```
 
 3. Compile the source code:
@@ -37,7 +48,7 @@ This is a CLI (Command Line Interface) application written in C++ for Linux syst
 4. Run the application (can run anywhere in your computer):
 
     ```bash
-    meida 
+    media 
     ```
 
 ## Usage
