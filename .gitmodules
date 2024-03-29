@@ -1,0 +1,3 @@
+[submodule "external/taglib"]
+	path = external/taglib
+	url = https://github.com/taglib/taglib.git
