@@ -1,0 +1,10 @@
+./tagwriter \
+  -t "q" \
+  -a "q" \
+  -A "q" \
+  -c "q" \
+  -g "q" \
+  -y "q" \
+  -T "q" \
+  "/home/quan246/projects/src/mock_prj/file_sample/10 second intro music.mp3"
+
