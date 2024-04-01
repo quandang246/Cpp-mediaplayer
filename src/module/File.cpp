@@ -13,15 +13,6 @@ File::File(fs::path path)
     filePath = path;
     const char *filePathStr = filePath.c_str();
     TagLib::FileRef File_ref(filePathStr);
-
-    if (isAudioFile(filePath))
-    {
-        isAV = true;
-    }
-    else if (isVideoFile(filePath))
-    {
-        isAV = false;
-    }
 }
 
 bool File::isAudioFile(const fs::path &filePath)

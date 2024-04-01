@@ -34,6 +34,9 @@ public:
     std::streamsize getSize();
     int getBitrate();
     int getDuration();
+
+    // Update function
+    void update();
 };
 
 #endif

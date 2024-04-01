@@ -24,6 +24,9 @@ public:
     TagLib::String getGenre(); 
     unsigned int getPublish_Year();
     int getDuration();
+
+    // update function
+    void update();
 };
 
 #endif

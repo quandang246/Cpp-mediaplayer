@@ -50,6 +50,8 @@ public:
     virtual std::streamsize getSize();
     virtual int getBitrate();
     
+    // update function
+    virtual void update()=0;
 };
 
 #endif
