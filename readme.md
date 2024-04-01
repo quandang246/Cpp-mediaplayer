@@ -71,7 +71,7 @@ This is a CLI (Command Line Interface) application written in C++ for Linux syst
 3. **Metadata of a File**:
     - Retrieve and edit metadata of media files:
         - [x] View metadata such as track name, album, artist, duration, genre, publisher, publish year for audio files; name, size, duration, bitrate, codec for video files.
-        - [ ] Edit metadata: modify existing values or add new keys.
+        - [x] Edit metadata: modify existing values or add new keys.
 
 4. **Play Music**:
     - Utilizes SDL2 library to play music:
