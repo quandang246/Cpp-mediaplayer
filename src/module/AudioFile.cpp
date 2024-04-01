@@ -65,3 +65,30 @@ int AudioFile::getDuration()
 {
     return Duration;
 }
+
+void AudioFile::update()
+{
+    const char *filePathStr = filePath.c_str();
+    TagLib::FileRef f(filePathStr);
+    if (!f.isNull() && f.tag())
+    {
+        TagLib::Tag *tag = f.tag();
+        // Track_name
+        Track_name = tag->title();
+        // Artist
+        Artist = tag->artist();
+        // Album
+        Album = tag->album();
+        // Publish_Year
+        Publish_Year = tag->year();
+        // Genre
+        Genre = tag->genre();
+    }
+
+    if (!f.isNull() && f.audioProperties())
+    {
+        TagLib::AudioProperties *properties = f.audioProperties();
+        // Duration
+        Duration = properties->lengthInSeconds();
+    }
+}

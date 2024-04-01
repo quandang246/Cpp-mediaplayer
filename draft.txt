@@ -1,9 +1,0 @@
-./tagwriter \
-  -t "Title of the Song" \
-  -a "Artist Name" \
-  -A "Album Name" \
-  -c "Comment or Description" \
-  -g "Genre" \
-  -y "Year" \
-  -T "Track Number" \
-  "/home/quan246/projects/src/mock_prj/file_sample/10 second intro music.mp3"
