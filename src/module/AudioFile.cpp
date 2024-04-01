@@ -14,7 +14,7 @@ AudioFile::AudioFile(fs::path path)
     filePath = path;
 
     // Is audio/video
-    isAV = false;
+    isAV = true;
 
     const char *filePathStr = filePath.c_str();
     TagLib::FileRef f(filePathStr);

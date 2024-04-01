@@ -26,6 +26,7 @@ void MediaManagement::run()
         std::cout << "3 - Delete a playlist" << std::endl;
         std::cout << "4 - view all playlist" << std::endl;
         std::cout << "5 - Update playlist" << std::endl;
+        std::cout << "6 - View File's metadate" << std::endl;
 
         int choice;
         std::cout << "Please enter your's choice: ";
@@ -53,6 +54,9 @@ void MediaManagement::run()
             break;
         case 5:
             update_PL();
+            break;
+        case 6:
+            view_file_MD();
             break;
         default:
             std::cout << "Invalid input, please try again!" << std::endl;
@@ -163,35 +167,76 @@ void MediaManagement::view_all_FL()
         std::cout << "Media files in that folder and all sub-folder (audio and video): " << std::endl;
         for (int i = 0; i < folderList.get_file_count(); i++)
         {
-            if (folderList.get_file(i)->get_isAV())
+            File *file_ptr = folderList.get_file(i);
+            if (file_ptr->get_isAV())
             {
-                std::cout   << "Index: " << i << std::endl;
-                std::cout   << "Audio " << " - "  
-                            << "Track_name: " << folderList.get_file(i)->getName() << " - " 
-                            << "Album: " << folderList.get_file(i)->getAlbum() << " - " 
-                            << "Artist: " << folderList.get_file(i)->getArtist() << " - " 
-                            << "Genre: " << folderList.get_file(i)->getGenre() << " - " 
-                            << "Publish_Year: " << folderList.get_file(i)->getPublish_Year() << " - " 
-                            << "Duration: " << folderList.get_file(i)->getDuration() << " - " 
-                            << std::endl;
-                            
-                std::cout << "File_path: " << folderList.get_file(i)->get_filePath() << std::endl;
+                std::cout << "Index: " << i << std::endl;
+                std::cout << "File_path: " << file_ptr->get_filePath() << std::endl;
+                std::cout << "Audio "
+                          << " - "
+                          << "Track_name: " << file_ptr->getName() << " - "
+                          << "Album: " << file_ptr->getAlbum() << " - "
+                          << "Artist: " << file_ptr->getArtist() << " - "
+                          << "Genre: " << file_ptr->getGenre() << " - "
+                          << "Publish_Year: " << file_ptr->getPublish_Year() << " - "
+                          << "Duration: " << file_ptr->getDuration()
+                          << std::endl;
             }
-            else if (!folderList.get_file(i)->get_isAV())
+            else if (!file_ptr->get_isAV())
             {
-                std::cout   << "Index: " << i << std::endl;
-                std::cout   << "Video " << " - "  
-                            << "Name: " << folderList.get_file(i)->getName() << " - " 
-                            << "Codec: " << folderList.get_file(i)->getCodec() << " - " 
-                            << "Size: " << folderList.get_file(i)->getSize() << " - " 
-                            << "Bitrate: " << folderList.get_file(i)->getBitrate() << " - " 
-                            << "Duration: " << folderList.get_file(i)->getDuration() << " - " 
-                            << std::endl;
-                            
-                std::cout << "File_path: " << folderList.get_file(i)->get_filePath() << std::endl;
+                std::cout << "Index: " << i << std::endl;
+                std::cout << "File_path: " << file_ptr->get_filePath() << std::endl;
+                std::cout << "Video "
+                          << " - "
+                          << "Name: " << file_ptr->getName() << " - "
+                          << "Codec: " << file_ptr->getCodec() << " - "
+                          << "Size: " << file_ptr->getSize() << " - "
+                          << "Bitrate: " << file_ptr->getBitrate() << " - "
+                          << "Duration: " << file_ptr->getDuration() << std::endl;
             }
         }
         std::cout << "Total: " << folderList.get_file_count() << std::endl;
+    }
+}
+
+void MediaManagement::view_file_MD()
+{
+    std::string pathString;
+    std::cout << "Please enter a path: ";
+    std::getline(std::cin, pathString);
+
+    fs::path path(pathString);
+
+    File *file_ptr = nullptr;
+    if (File::isAudioFile(path))
+    {
+        file_ptr = new AudioFile(path);
+        std::cout << "File_path: " << file_ptr->get_filePath() << std::endl;
+        std::cout << "Audio "
+                  << " - "
+                  << "Track_name: " << file_ptr->getName() << " - "
+                  << "Album: " << file_ptr->getAlbum() << " - "
+                  << "Artist: " << file_ptr->getArtist() << " - "
+                  << "Genre: " << file_ptr->getGenre() << " - "
+                  << "Publish_Year: " << file_ptr->getPublish_Year() << " - "
+                  << "Duration: " << file_ptr->getDuration()
+                  << std::endl;
+    }
+    else if (File::isVideoFile(path))
+    {
+        file_ptr = new VideoFile(path);
+        std::cout << "File_path: " << file_ptr->get_filePath() << std::endl;
+        std::cout << "Video "
+                  << " - "
+                  << "Name: " << file_ptr->getName() << " - "
+                  << "Codec: " << file_ptr->getCodec() << " - "
+                  << "Size: " << file_ptr->getSize() << " - "
+                  << "Bitrate: " << file_ptr->getBitrate() << " - "
+                  << "Duration: " << file_ptr->getDuration() << std::endl;
+    }
+    else
+    {
+        std::cout << "Your file neither Video file nor Audio file! " << std::endl;
     }
 }
 

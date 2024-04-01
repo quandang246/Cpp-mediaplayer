@@ -14,7 +14,7 @@ VideoFile::VideoFile(fs::path path)
     filePath = path;
 
     // Is audio/video
-    isAV = true;
+    isAV = false;
 
     // Codec
     Codec = File::getCodec_init(path);
@@ -23,17 +23,18 @@ VideoFile::VideoFile(fs::path path)
     const char *filePathStr = filePath.c_str();
     Size = file_size(filePathStr);
 
-    // Name
-    if (!File_ref.isNull() && File_ref.tag())
+    TagLib::FileRef f(filePathStr);
+    if (!f.isNull() && f.tag())
     {
-        TagLib::Tag *tag = File_ref.tag();
+        TagLib::Tag *tag = f.tag();
+        // Track_name
         Name = tag->title();
     }
 
     // Bitrate and duration
-    if (!File_ref.isNull() && File_ref.audioProperties())
+    if (!f.isNull() && f.audioProperties())
     {
-        TagLib::AudioProperties *properties = File_ref.audioProperties();
+        TagLib::AudioProperties *properties = f.audioProperties();
         Bitrate = properties->bitrate();
         Duration = properties->lengthInSeconds();
     }
