@@ -45,6 +45,7 @@ public:
     
     // File function
     void view_file_MD();
+    void update_file_MD();
 };
 
 #endif

@@ -76,3 +76,29 @@ int VideoFile::getDuration()
 {
     return Duration;
 }
+
+void VideoFile::update()
+{
+    // Codec
+    Codec = File::getCodec_init(filePath);
+
+    // Size
+    const char *filePathStr = filePath.c_str();
+    Size = file_size(filePathStr);
+
+    TagLib::FileRef f(filePathStr);
+    if (!f.isNull() && f.tag())
+    {
+        TagLib::Tag *tag = f.tag();
+        // Track_name
+        Name = tag->title();
+    }
+
+    // Bitrate and duration
+    if (!f.isNull() && f.audioProperties())
+    {
+        TagLib::AudioProperties *properties = f.audioProperties();
+        Bitrate = properties->bitrate();
+        Duration = properties->lengthInSeconds();
+    }
+}
