@@ -12,9 +12,5 @@ int main(int argc, char* argv[])
     
     A.run();
 
-    // Test musicPlayer
-    musicPlayer B;
-    B.playMusic("/home/quan246/projects/src/mock_prj/file_sample/10 second intro music.mp3", 10);
-
     return 0;
 }

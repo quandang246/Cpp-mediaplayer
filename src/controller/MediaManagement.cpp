@@ -28,6 +28,7 @@ void MediaManagement::run()
         std::cout << "5 - Update playlist" << std::endl;
         std::cout << "6 - View File's metadate" << std::endl;
         std::cout << "7 - Update File's metadata" << std::endl;
+        std::cout << "8 - Play music from a file path" << std::endl;
 
         int choice;
         std::cout << "Please enter your's choice: ";
@@ -61,6 +62,9 @@ void MediaManagement::run()
             break;
         case 7:
             update_file_MD();
+            break;
+        case 8:
+            playMusic();
             break;
         default:
             std::cout << "Invalid input, please try again!" << std::endl;
@@ -230,7 +234,7 @@ void MediaManagement::view_file_MD()
                   << std::endl;
     }
     else if (File::isVideoFile(path))
-    {        
+    {
         file_ptr = new VideoFile(path);
         file_ptr->update();
         std::cout << "File_path: " << file_ptr->get_filePath() << std::endl;
@@ -307,11 +311,20 @@ void MediaManagement::update_file_MD()
         t->setTitle(new_Name);
 
         f.save();
-    }   
+    }
     else
     {
         std::cout << "Your file neither Video file nor Audio file! " << std::endl;
     }
+}
+
+void MediaManagement::playMusic()
+{
+    std::string someFile;
+    std::cout << "Please enter a file path: ";
+    std::getline(std::cin, someFile);
+
+    MP.playMusic(someFile, 10);
 }
 
 /*
