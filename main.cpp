@@ -1,4 +1,5 @@
 #include "src/controller/MediaManagement.hpp"
+#include "src/controller/musicPlayer.hpp"
 #include "mediaConfig.h"
 
 int main(int argc, char* argv[])
@@ -10,6 +11,10 @@ int main(int argc, char* argv[])
     MediaManagement A(cwd);
     
     A.run();
+
+    // Test musicPlayer
+    musicPlayer B;
+    B.playMusic("/home/quan246/projects/src/mock_prj/file_sample/10 second intro music.mp3", 10);
 
     return 0;
 }
