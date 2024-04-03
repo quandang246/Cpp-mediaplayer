@@ -6,6 +6,8 @@ set(SOURCES
 
 # Include directories
 include_directories(../module)
+include_directories(MultiThreading)
+
 # Find SDL2 libraries
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
@@ -14,7 +16,8 @@ include_directories(${SDL2_INCLUDE_DIRS})
 add_library(Controller ${SOURCES})
 
 # Link the required libraries, assuming Module is another library
-target_link_libraries(Controller Module)
+target_link_libraries(Controller Module multithreading)
+
 # Link SDL2 libraries
 target_link_libraries(Controller ${SDL2_LIBRARIES})
 target_link_libraries(Controller SDL2_image)

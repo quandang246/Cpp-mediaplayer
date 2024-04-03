@@ -324,7 +324,10 @@ void MediaManagement::playMusic()
     std::cout << "Please enter a file path: ";
     std::getline(std::cin, someFile);
 
-    MP.playMusic(someFile, 10);
+    ActiveObject obj;
+    // Add tasks to play music
+    obj.runFunction([this, someFile](){ MP.playMusic(someFile, 5); });
+    
 }
 
 /*

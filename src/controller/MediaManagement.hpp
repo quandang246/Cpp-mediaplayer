@@ -10,6 +10,7 @@
 #include "../module/PlayList.hpp"
 #include "../module/FolderList.hpp"
 #include "musicPlayer.hpp"
+#include "MultiThreading/ActiveObject.hpp"
 
 namespace fs = std::filesystem;
 
