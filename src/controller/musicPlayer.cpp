@@ -8,7 +8,6 @@ musicPlayer::~musicPlayer()
 {
 }
 
-
 bool musicPlayer::isValidExtension(const std::string& filename) {
     std::string extension = filename.substr(filename.find_last_of(".") + 1);
     return extension == "mp3" || extension == "wav" || extension == "ogg" || extension == "flac";
