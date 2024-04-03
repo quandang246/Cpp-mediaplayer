@@ -17,6 +17,7 @@ namespace fs = std::filesystem;
 class MediaManagement
 {
 private:
+    ActiveObject A;
     FolderList folderList;
     std::vector<PlayList> PlayLists;
     musicPlayer MP;

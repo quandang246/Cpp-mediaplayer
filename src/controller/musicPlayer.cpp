@@ -47,7 +47,7 @@ void musicPlayer::playMusic(const std::string& filePath, int durationInSeconds) 
     if (Mix_PlayMusic(music, -1) == -1) {
         std::cerr << "Failed to play music! SDL_mixer Error: " << Mix_GetError() << std::endl;
     } else {
-        std::cout << "Playing music..." << std::endl;
+        std::cout << "Playing music: " << filePath << std::endl;
     }
 
     // Wait for specified duration

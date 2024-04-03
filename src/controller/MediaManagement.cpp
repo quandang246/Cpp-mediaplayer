@@ -324,10 +324,75 @@ void MediaManagement::playMusic()
     std::cout << "Please enter a file path: ";
     std::getline(std::cin, someFile);
 
-    ActiveObject obj;
+    File *music2play = nullptr;
+
+    fs::path path(someFile);
+    if (fs::is_regular_file(path))
+    {
+
+        if (File::isAudioFile(path))
+        {
+            music2play = new VideoFile(path);
+        }
+        else if (File::isVideoFile(path))
+        {
+            music2play = new AudioFile(path);
+        }
+        else
+        {
+            std::cout << "The file is not an audio file or video file!" << std::endl;
+        }
+    }
+
+    // Get duration
+    int duration = music2play->getDuration();
+
     // Add tasks to play music
-    obj.runFunction([this, someFile](){ MP.playMusic(someFile, 5); });
+    A.runFunction([this, someFile, duration]()
+                  { MP.playMusic(someFile, duration); });
+
+    int Time = 0;
+    std::thread time([&Time, duration]()
+                     {
+        for (int i = 0; i < duration; i++) 
+        {
+            // Sleep 1 sec to get the right time
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+            Time++;
+        } });
     
+    time.detach();
+    // Sleep to wait playing music thread run
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+
+    while (true)
+    {
+        std::cout << "Enter music playing mode!" << std::endl;
+        std::cout << "0 - Exit." << std::endl;
+        std::cout << "1 - View Time/Duration" << std::endl;
+        std::cout << "2 - Pause/Continue." << std::endl;
+
+        int choice;
+        std::cout << "Please enter your's choice: ";
+        std::cin >> choice;
+
+        // Clearing the input buffer
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+        switch (choice)
+        {
+        case 0:
+            std::cout << "Exiting playing music mode." << std::endl;
+            return;
+        case 1:
+            std::cout << "Time/Duration: " << Time << "/" << duration << std::endl;
+            break;
+        default:
+            std::cout << "Invalid input, please try again!" << std::endl;
+            break;
+        }
+    }
 }
 
 /*
