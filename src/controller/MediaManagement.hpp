@@ -9,12 +9,14 @@
 #include <filesystem> // Include for std::filesystem::path
 #include "../module/PlayList.hpp"
 #include "../module/FolderList.hpp"
+#include "musicPlayer.hpp"
 
 namespace fs = std::filesystem;
 
 class MediaManagement
 {
 private:
+    musicPlayer MP;
     FolderList folderList;
     std::vector<PlayList> PlayLists;
 
@@ -46,6 +48,8 @@ public:
     // File function
     void view_file_MD();
     void update_file_MD();
+    void playingMusic();
+    void control();
 };
 
 #endif

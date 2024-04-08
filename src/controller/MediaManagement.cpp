@@ -28,6 +28,8 @@ void MediaManagement::run()
         std::cout << "5 - Update playlist" << std::endl;
         std::cout << "6 - View File's metadate" << std::endl;
         std::cout << "7 - Update File's metadata" << std::endl;
+        std::cout << "8 - Play music from a file path" << std::endl;
+        std::cout << "9 - Enter playing control modes" << std::endl;
 
         int choice;
         std::cout << "Please enter your's choice: ";
@@ -61,6 +63,12 @@ void MediaManagement::run()
             break;
         case 7:
             update_file_MD();
+            break;
+        case 8:
+            playingMusic();
+            break;
+        case 9:
+            control();
             break;
         default:
             std::cout << "Invalid input, please try again!" << std::endl;
@@ -230,7 +238,7 @@ void MediaManagement::view_file_MD()
                   << std::endl;
     }
     else if (File::isVideoFile(path))
-    {        
+    {
         file_ptr = new VideoFile(path);
         file_ptr->update();
         std::cout << "File_path: " << file_ptr->get_filePath() << std::endl;
@@ -307,26 +315,35 @@ void MediaManagement::update_file_MD()
         t->setTitle(new_Name);
 
         f.save();
-    }   
+    }
     else
     {
         std::cout << "Your file neither Video file nor Audio file! " << std::endl;
     }
 }
 
-/*
-std::filesystem::path MediaManagement::getexepath() {
-    char result[PATH_MAX];
-    ssize_t count = readlink("/proc/self/exe", result, PATH_MAX);
-    if (count != -1) {
-        result[count] = '\0'; // Null-terminate the string
-        // Find the last occurrence of '/' in the path
-        char *lastSlash = strrchr(result, '/');
-        if (lastSlash != nullptr) {
-            *(lastSlash + 1) = '\0'; // Null-terminate at the position of the last '/'
-            return std::filesystem::path(result);
-        }
+void MediaManagement::playingMusic()
+{
+    if (MP.getRunning() == false)
+    {
+        std::string filePathStr;
+        std::cout << "Please enter a file path: ";
+        std::getline(std::cin, filePathStr);
+
+        fs::path filePath = filePathStr;
+
+        File *new_audio_file = new AudioFile(filePath);
+
+        MP.play(filePathStr, new_audio_file->getDuration());
     }
-    return ""; // Return an empty path if there's an error or no '/'
+    else
+    {
+        std::cout << "Something are already playing!" << std::endl;
+    }
 }
-*/
+
+void MediaManagement::control()
+{
+    MP.play_action();
+}
+

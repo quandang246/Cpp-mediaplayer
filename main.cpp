@@ -1,4 +1,5 @@
 #include "src/controller/MediaManagement.hpp"
+#include "src/controller/musicPlayer.hpp"
 #include "mediaConfig.h"
 
 int main(int argc, char* argv[])
