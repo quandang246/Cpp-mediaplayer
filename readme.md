@@ -76,7 +76,7 @@ This is a CLI (Command Line Interface) application written in C++ for Linux syst
 4. **Play Music**:
     - Utilizes SDL2 library to play music:
         - [x] Play functionality (in another thread)
-        - [ ] Pause/Resume functionality
+        - [x] Pause/Resume functionality
         - [ ] Next/Previous track
         - [ ] Automatically moves to the next song when the current song finishes
         - [x] Displays current time and duration of the song

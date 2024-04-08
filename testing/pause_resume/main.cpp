@@ -233,10 +233,11 @@ int main()
             if (obj.isPaused())
             {
                 paused_time = Time;
+                end_time += 100000;
             }
             else
             {
-                end_time += Time - paused_time;
+                end_time += Time - paused_time - 100000;
             }
             break;
         default:
