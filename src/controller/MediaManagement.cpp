@@ -1,7 +1,8 @@
 #include "MediaManagement.hpp"
 
-MediaManagement::MediaManagement(std::string path)
+MediaManagement::MediaManagement(std::string path) 
 {
+    queue_play = std::thread(&MediaManagement::playing_queue, this);
     std::filesystem::path programPath(path);
 
     folderList = FolderList(programPath);
@@ -14,6 +15,7 @@ MediaManagement::MediaManagement()
 
 MediaManagement::~MediaManagement()
 {
+    queue_play.join();
 }
 
 void MediaManagement::run()
@@ -133,6 +135,7 @@ void MediaManagement::update_PL()
             std::cout << "1 - View Media files in playlist." << std::endl;
             std::cout << "2 - Add new file." << std::endl;
             std::cout << "3 - Remove file." << std::endl;
+            std::cout << "4 - Playing playlist." << std::endl;
 
             int choice;
             std::cout << "Please enter your's choice: ";
@@ -155,6 +158,9 @@ void MediaManagement::update_PL()
                 break;
             case 3:
                 edit_PL->removeFile();
+                break;
+            case 4:
+                play_PL(PL_id);
                 break;
             default:
                 std::cout << "Invalid input, please try again!" << std::endl;
@@ -324,22 +330,15 @@ void MediaManagement::update_file_MD()
 
 void MediaManagement::playingMusic()
 {
-    if (MP.getRunning() == false)
-    {
-        std::string filePathStr;
-        std::cout << "Please enter a file path: ";
-        std::getline(std::cin, filePathStr);
+    std::string filePathStr;
+    std::cout << "Please enter a file path: ";
+    std::getline(std::cin, filePathStr);
 
-        fs::path filePath = filePathStr;
+    fs::path filePath = filePathStr;
 
-        File *new_audio_file = new AudioFile(filePath);
+    File *new_audio_file = new AudioFile(filePath);
 
-        MP.play(filePathStr, new_audio_file->getDuration());
-    }
-    else
-    {
-        std::cout << "Something are already playing!" << std::endl;
-    }
+    song_queue.push(new_audio_file);
 }
 
 void MediaManagement::control()
@@ -347,3 +346,29 @@ void MediaManagement::control()
     MP.play_action();
 }
 
+void MediaManagement::playing_queue()
+{
+    while (true)
+    {
+        if (!MP.getRunning() && song_queue.size() != 0)
+        {
+            File *play_file = song_queue.front();
+
+            // std::cout << "Play " << play_file->get_filePath() << " - " << play_file->getDuration() << std::endl;
+
+            MP.play(play_file->get_filePath(), play_file->getDuration());
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+
+            song_queue.pop();
+        }
+    }
+}
+
+void MediaManagement::play_PL(int PL_id)
+{
+    for (int i = 0; i < PlayLists[PL_id].getCount(); i++)
+    {
+        song_queue.push(PlayLists[PL_id].files_ptr(i));
+    }
+    std::cout << "queue: " << song_queue.size() << std::endl;
+}

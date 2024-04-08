@@ -58,6 +58,7 @@ void musicPlayer::playMusic(const std::string &filePath, int &durationInSeconds)
     }
     else
     {
+        running = true;
         // std::cout << "Playing music..." << std::endl;
     }
 
@@ -66,6 +67,10 @@ void musicPlayer::playMusic(const std::string &filePath, int &durationInSeconds)
     {
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
+
+    // Reset timer
+    obj.terminateMusic();
+    running = false;
 
     // Free resources and quit SDL
     Mix_FreeMusic(music);
@@ -82,14 +87,12 @@ void musicPlayer::time_process()
             // Sleep 1 sec to get the right time
             std::this_thread::sleep_for(std::chrono::seconds(1));
             Time++;
-            // std::cout << Time << " - " << end_time << std::endl;
-            if (Time == end_time)
-            {
-                obj.terminateMusic();
-                running = false;
-                Time = 0;
-                pause_sum = 0;
-            }
+            // std::cout << "Time: " << Time << " - " << end_time << std::endl;
+        }
+        else
+        {
+            Time = 0;
+            pause_sum = 0;
         }
     }
 }
@@ -103,8 +106,6 @@ void musicPlayer::play(std::string FP, int d)
     // Add tasks to play music
     obj.runFunction([this, filePath]()
                     { playMusic(filePath, end_time); });
-
-    running = true;
 
     return;
 }

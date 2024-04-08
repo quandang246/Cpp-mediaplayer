@@ -19,7 +19,9 @@ private:
     musicPlayer MP;
     FolderList folderList;
     std::vector<PlayList> PlayLists;
-
+    std::thread queue_play;
+    std::queue<File*> song_queue;
+    
 public:
     MediaManagement();
     ~MediaManagement();
@@ -38,7 +40,8 @@ public:
     void view_all_PL();
     // Update playlist
     void update_PL();
-
+    // Play playlist
+    void play_PL(int PL_id);
 
     //Folder function
     // view all folderlist
@@ -48,8 +51,11 @@ public:
     // File function
     void view_file_MD();
     void update_file_MD();
-    void playingMusic();
     void control();
+    void playingMusic();
+    
+    // queue function
+    void playing_queue();
 };
 
 #endif

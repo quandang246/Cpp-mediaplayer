@@ -26,7 +26,6 @@ void PlayList::addFile()
         {
             new_file = new VideoFile(path);
             Files.push_back(new_file);
-            
         }
         else if (File::isVideoFile(path))
         {
@@ -75,4 +74,14 @@ void PlayList::display()
 std::string PlayList::get_PL_name()
 {
     return PL_name;
+}
+
+File* PlayList::files_ptr(int i)
+{
+    return Files[i];
+}
+
+int PlayList::getCount()
+{
+    return Files.size();
 }
