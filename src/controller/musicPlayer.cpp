@@ -82,8 +82,8 @@ void musicPlayer::time_process()
             // Sleep 1 sec to get the right time
             std::this_thread::sleep_for(std::chrono::seconds(1));
             Time++;
-            // std::cout << Time << " - " << end_time << std::endl;
-            if (Time == end_time)
+            std::cout << "Time: " << Time << " - " << end_time << std::endl;
+            if (Time == end_time+1)
             {
                 obj.terminateMusic();
                 running = false;

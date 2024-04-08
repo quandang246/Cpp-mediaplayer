@@ -31,6 +31,10 @@ public:
     
     // get PL_name;
     std::string get_PL_name();
+    // get Files pointer
+    File* files_ptr(int i);
+    // getCount
+    int getCount();
 };
 
 #endif

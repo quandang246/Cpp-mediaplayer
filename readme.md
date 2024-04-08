@@ -78,7 +78,7 @@ This is a CLI (Command Line Interface) application written in C++ for Linux syst
         - [x] Play functionality (in another thread)
         - [x] Pause/Resume functionality
         - [ ] Next/Previous track
-        - [ ] Automatically moves to the next song when the current song finishes
+        - [x] Automatically moves to the next song when the current song finishes
         - [x] Displays current time and duration of the song
 
 5. **Change Volume**:

@@ -133,6 +133,7 @@ void MediaManagement::update_PL()
             std::cout << "1 - View Media files in playlist." << std::endl;
             std::cout << "2 - Add new file." << std::endl;
             std::cout << "3 - Remove file." << std::endl;
+            std::cout << "4 - Playing playlist." << std::endl;
 
             int choice;
             std::cout << "Please enter your's choice: ";
@@ -155,6 +156,9 @@ void MediaManagement::update_PL()
                 break;
             case 3:
                 edit_PL->removeFile();
+                break;
+            case 4:
+                play_PL(PL_id);
                 break;
             default:
                 std::cout << "Invalid input, please try again!" << std::endl;
@@ -347,3 +351,25 @@ void MediaManagement::control()
     MP.play_action();
 }
 
+void MediaManagement::play_PL(int index)
+{
+    int i = 0;
+    while (true)
+    {
+        if (!MP.getRunning())
+        {
+            fs::path playingPath = PlayLists[index].files_ptr(i)->get_filePath();
+            std::string playingPathStr = playingPath.string();
+
+            std::cout << "Play " << playingPath << " - "  << PlayLists[index].files_ptr(i)->getDuration() << std::endl;
+            MP.play(playingPathStr, PlayLists[index].files_ptr(i)->getDuration());
+
+            i++;
+        }
+        if (i == PlayLists[index].getCount() && !MP.getRunning())
+        { 
+            std::cout << "Fuck" << std::endl;
+            break;
+        }
+    }
+}

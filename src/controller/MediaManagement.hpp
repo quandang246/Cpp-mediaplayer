@@ -38,6 +38,8 @@ public:
     void view_all_PL();
     // Update playlist
     void update_PL();
+    // Play playlist
+    void play_PL(int index);
 
 
     //Folder function
