@@ -76,12 +76,8 @@ public:
 
     ~ActiveObject()
     {
-        std::cout << "worker_thread" << std::endl;
         dispatch_queue.exit(); // Signal the dispatch queue to exit
-        if (worker_thread.joinable())
-        {
-            worker_thread.join(); // Wait for the detached thread to finish
-        }
+        worker_thread.join();  // Wait for the detached thread to finish
     }
 
     void run_tasks()
@@ -130,19 +126,18 @@ class musicPlayer
 {
 private:
     ActiveObject obj;
-    int duration;
+    bool running;
+    std::thread time_thread;
     int Time;
+    int pause_sum;
+    int duration;
     int end_time;
-    int paused_time;
 
 public:
-    musicPlayer();
-    musicPlayer(int d)
+    musicPlayer() : Time(0), running(false), end_time(0), pause_sum(0)
     {
-        duration = d;
-        Time = 0;
-        end_time = duration;
-        paused_time = 0;
+        time_thread = std::thread(&musicPlayer::time_process, this);
+        time_thread.detach();
     }
     ~musicPlayer()
     {
@@ -156,6 +151,7 @@ public:
 
     void playMusic(const std::string &filePath, int &durationInSeconds)
     {
+
         // Initialize SDL
         if (SDL_Init(SDL_INIT_AUDIO) < 0)
         {
@@ -196,87 +192,133 @@ public:
         }
         else
         {
-            std::cout << "Playing music..." << std::endl;
+            // std::cout << "Playing music..." << std::endl;
         }
 
+        // Wait for specified duration
         for (int i = 0; i < durationInSeconds; i++)
         {
-            // Wait for specified duration
-            SDL_Delay(1000);
-        }            
-        
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+        }
+
         // Free resources and quit SDL
         Mix_FreeMusic(music);
         Mix_CloseAudio();
         SDL_Quit();
     }
 
+    void time_process()
+    {
+        while (true)
+        {
+            if (running)
+            {
+                // Sleep 1 sec to get the right time
+                std::this_thread::sleep_for(std::chrono::seconds(1));
+                Time++;
+                // std::cout << Time << " - " << end_time << std::endl;
+                if (Time == end_time)
+                {
+                    obj.terminateMusic();
+                    running = false;
+                    Time = 0;
+                    pause_sum = 0;
+                }
+            }
+        }
+    }
+
     void play()
     {
-        std::string filePath;
-        std::cout << "Please enter file path: ";
-        std::getline(std::cin, filePath);
-        
-        // Add tasks to play music
-        obj.runFunction([this, filePath]()
-                        { this->playMusic(filePath, end_time); });
-
-        std::thread time_thread([this]()
-                                {
-        for (int i = 0; i < end_time; i++) 
+        if (running == false)
         {
-            // Sleep 1 sec to get the right time
-            std::this_thread::sleep_for(std::chrono::seconds(1));
-            Time++;
-            std::cout << Time << std::endl;
+            std::string filePath;
+            std::cout << "Please enter a file path: ";
+            std::getline(std::cin, filePath);
+            int temp;
+            std::cout << "Please enter duration: ";
+            std::cin >> duration;
+            end_time = duration;
 
-            if (Time == end_time)
-            {
-                obj.terminateMusic();
-            }
-        } });
+            // Add tasks to play music
+            obj.runFunction([this, filePath]()
+                            { playMusic(filePath, end_time); });
 
-        bool playing = true;
-        while (playing)
+            running = true;
+        }
+        // Clearing the input buffer
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        return;
+    }
+
+    void play_action()
+    {
+        if (running == true)
         {
-            std::cout << "Enter 1 to pause/resume music or 0 to exit: ";
-            int choice;
-            std::cin >> choice;
-            switch (choice)
+
+            std::cout << "Enter controlling play mode!" << std::endl;
+
+            int paused_time;
+
+            while (running)
             {
-            case 0:
-                std::cout << "time_thread" << std::endl;
-                time_thread.detach();
-                return;
-            case 1:
-                obj.pauseOrResume();
-                std::cout << "Music " << (obj.isPaused() ? "paused" : "resumed") << std::endl;
-                if (obj.isPaused())
+                std::cout << "Enter 0 to exit. " << std::endl;
+                std::cout << "Enter 1 to pause/resume music. " << std::endl;
+                std::cout << "Enter 2 to view Time/Duration." << std::endl;
+                std::cout << "Enter 3 to terminate." << std::endl;
+
+                int choice;
+                std::cin >> choice;
+                switch (choice)
                 {
-                    paused_time = Time;
-                    // Adding to make thread alive until end_time is updated
-                    end_time += 1000000;
+                case 0:
+                    running = false;
+                    break;
+                case 1:
+                    obj.pauseOrResume();
+                    std::cout << "Music " << (obj.isPaused() ? "paused" : "resumed") << std::endl;
+                    if (obj.isPaused())
+                    {
+                        paused_time = Time;
+                        end_time += 100000;
+                    }
+                    else
+                    {
+                        end_time = end_time + Time - paused_time - 100000;
+                        pause_sum = pause_sum + Time - paused_time;
+                    }
+                    break;
+                case 2:
+                    std::cout << "Time/Duration: " << (obj.isPaused() ? paused_time - pause_sum : Time - pause_sum) << "/" << duration << std::endl;
+                    break;
+                case 3:
+                    obj.terminateMusic();
+                    end_time = 0;
+                    running = false;
+                    Time = 0;
+                    pause_sum = 0;
+                    return;
+                default:
+                    std::cout << "Invalid choice!" << std::endl;
+                    break;
                 }
-                else
-                {
-                    end_time += Time - paused_time - 1000000;
-                }
-                break;
-            default:
-                std::cout << "Invalid choice!" << std::endl;
-                break;
             }
+        }
+        else
+        {
+            std::cout << "Nothing is playing!" << std::endl;
         }
     }
 };
 
 int main()
 {
-    musicPlayer MP(10);
+    musicPlayer A;
 
-    MP.play();
+    A.play();
 
-    MP.play();
+    A.play_action();
 
     return 0;
 }

@@ -12,6 +12,9 @@ include_directories(MultiThreading)
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 
+# Link the pthread library
+find_package(Threads REQUIRED)
+
 # Create the library
 add_library(Controller ${SOURCES})
 
@@ -24,3 +27,4 @@ target_link_libraries(Controller SDL2_image)
 target_link_libraries(Controller SDL2_ttf)
 target_link_libraries(Controller SDL2_mixer)
 target_link_libraries(Controller rt)
+target_link_libraries(Controller Threads::Threads)

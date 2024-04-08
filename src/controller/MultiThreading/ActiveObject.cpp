@@ -1,6 +1,6 @@
 #include "ActiveObject.hpp"
 
-ActiveObject::ActiveObject() : count(0)
+ActiveObject::ActiveObject() : count(0), paused(false)
 {
     worker_thread = std::thread(&ActiveObject::run_tasks, this);
 }
@@ -27,4 +27,27 @@ void ActiveObject::run_tasks()
 void ActiveObject::runFunction(std::function<void()> func)
 {
     dispatch_queue.add(func);
+}
+
+void ActiveObject::pauseOrResume()
+{
+    if (paused == true)
+    {
+        Mix_ResumeMusic();
+    }
+    else
+    {
+        Mix_PauseMusic();
+    }
+    paused = !paused;
+}
+
+bool ActiveObject::isPaused()
+{
+    return paused;
+}
+
+void ActiveObject::terminateMusic()
+{
+    Mix_HaltMusic(); // Stop music playback
 }

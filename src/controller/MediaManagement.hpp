@@ -10,17 +10,15 @@
 #include "../module/PlayList.hpp"
 #include "../module/FolderList.hpp"
 #include "musicPlayer.hpp"
-#include "MultiThreading/ActiveObject.hpp"
 
 namespace fs = std::filesystem;
 
 class MediaManagement
 {
 private:
-    ActiveObject A;
+    musicPlayer MP;
     FolderList folderList;
     std::vector<PlayList> PlayLists;
-    musicPlayer MP;
 
 public:
     MediaManagement();
@@ -50,8 +48,8 @@ public:
     // File function
     void view_file_MD();
     void update_file_MD();
-    void playMusic();
-    
+    void playingMusic();
+    void control();
 };
 
 #endif

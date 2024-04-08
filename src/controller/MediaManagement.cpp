@@ -29,6 +29,7 @@ void MediaManagement::run()
         std::cout << "6 - View File's metadate" << std::endl;
         std::cout << "7 - Update File's metadata" << std::endl;
         std::cout << "8 - Play music from a file path" << std::endl;
+        std::cout << "9 - Enter playing control modes" << std::endl;
 
         int choice;
         std::cout << "Please enter your's choice: ";
@@ -64,7 +65,10 @@ void MediaManagement::run()
             update_file_MD();
             break;
         case 8:
-            playMusic();
+            playingMusic();
+            break;
+        case 9:
+            control();
             break;
         default:
             std::cout << "Invalid input, please try again!" << std::endl;
@@ -318,96 +322,28 @@ void MediaManagement::update_file_MD()
     }
 }
 
-void MediaManagement::playMusic()
+void MediaManagement::playingMusic()
 {
-    std::string someFile;
-    std::cout << "Please enter a file path: ";
-    std::getline(std::cin, someFile);
-
-    File *music2play = nullptr;
-
-    fs::path path(someFile);
-    if (fs::is_regular_file(path))
+    if (MP.getRunning() == false)
     {
+        std::string filePathStr;
+        std::cout << "Please enter a file path: ";
+        std::getline(std::cin, filePathStr);
 
-        if (File::isAudioFile(path))
-        {
-            music2play = new VideoFile(path);
-        }
-        else if (File::isVideoFile(path))
-        {
-            music2play = new AudioFile(path);
-        }
-        else
-        {
-            std::cout << "The file is not an audio file or video file!" << std::endl;
-        }
+        fs::path filePath = filePathStr;
+
+        File *new_audio_file = new AudioFile(filePath);
+
+        MP.play(filePathStr, new_audio_file->getDuration());
     }
-
-    // Get duration
-    int duration = music2play->getDuration();
-
-    // Add tasks to play music
-    A.runFunction([this, someFile, duration]()
-                  { MP.playMusic(someFile, duration); });
-
-    int Time = 0;
-    std::thread time([&Time, duration]()
-                     {
-        for (int i = 0; i < duration; i++) 
-        {
-            // Sleep 1 sec to get the right time
-            std::this_thread::sleep_for(std::chrono::seconds(1));
-            Time++;
-        } });
-    
-    time.detach();
-    // Sleep to wait playing music thread run
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-
-    while (true)
+    else
     {
-        std::cout << "Enter music playing mode!" << std::endl;
-        std::cout << "0 - Exit." << std::endl;
-        std::cout << "1 - View Time/Duration" << std::endl;
-        std::cout << "2 - Pause/Continue." << std::endl;
-
-        int choice;
-        std::cout << "Please enter your's choice: ";
-        std::cin >> choice;
-
-        // Clearing the input buffer
-        std::cin.clear();
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-        switch (choice)
-        {
-        case 0:
-            std::cout << "Exiting playing music mode." << std::endl;
-            return;
-        case 1:
-            std::cout << "Time/Duration: " << Time << "/" << duration << std::endl;
-            break;
-        default:
-            std::cout << "Invalid input, please try again!" << std::endl;
-            break;
-        }
+        std::cout << "Something are already playing!" << std::endl;
     }
 }
 
-/*
-std::filesystem::path MediaManagement::getexepath() {
-    char result[PATH_MAX];
-    ssize_t count = readlink("/proc/self/exe", result, PATH_MAX);
-    if (count != -1) {
-        result[count] = '\0'; // Null-terminate the string
-        // Find the last occurrence of '/' in the path
-        char *lastSlash = strrchr(result, '/');
-        if (lastSlash != nullptr) {
-            *(lastSlash + 1) = '\0'; // Null-terminate at the position of the last '/'
-            return std::filesystem::path(result);
-        }
-    }
-    return ""; // Return an empty path if there's an error or no '/'
+void MediaManagement::control()
+{
+    MP.play_action();
 }
-*/
+
