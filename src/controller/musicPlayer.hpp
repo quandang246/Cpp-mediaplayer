@@ -32,6 +32,7 @@ public:
     void play(std::string FP, int d);
     void play_action();
     
+    void terminate();
 };
 
 #endif

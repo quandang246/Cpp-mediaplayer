@@ -152,10 +152,7 @@ void musicPlayer::play_action()
                 break;
             case 3:
                 obj.terminateMusic();
-                end_time = 0;
                 running = false;
-                Time = 0;
-                pause_sum = 0;
                 return;
             default:
                 std::cout << "Invalid choice!" << std::endl;
@@ -173,3 +170,10 @@ bool musicPlayer::getRunning()
 {
     return running;
 }
+
+void musicPlayer::terminate()
+{
+    obj.terminateMusic();
+    running = false;
+}
+

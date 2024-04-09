@@ -1,6 +1,6 @@
 #include "MediaManagement.hpp"
 
-MediaManagement::MediaManagement(std::string path) 
+MediaManagement::MediaManagement(std::string path)
 {
     queue_play = std::thread(&MediaManagement::playing_queue, this);
     std::filesystem::path programPath(path);
@@ -32,6 +32,7 @@ void MediaManagement::run()
         std::cout << "7 - Update File's metadata" << std::endl;
         std::cout << "8 - Play music from a file path" << std::endl;
         std::cout << "9 - Enter playing control modes" << std::endl;
+        std::cout << "10 - Next/Previous " << std::endl;
 
         int choice;
         std::cout << "Please enter your's choice: ";
@@ -71,6 +72,9 @@ void MediaManagement::run()
             break;
         case 9:
             control();
+            break;
+        case 10:
+            next_prv();
             break;
         default:
             std::cout << "Invalid input, please try again!" << std::endl;
@@ -359,6 +363,8 @@ void MediaManagement::playing_queue()
             MP.play(play_file->get_filePath(), play_file->getDuration());
             std::this_thread::sleep_for(std::chrono::seconds(1));
 
+            song_stack.push(play_file);
+
             song_queue.pop();
         }
     }
@@ -371,4 +377,60 @@ void MediaManagement::play_PL(int PL_id)
         song_queue.push(PlayLists[PL_id].files_ptr(i));
     }
     std::cout << "queue: " << song_queue.size() << std::endl;
+}
+
+void MediaManagement::next_prv()
+{
+    while (true)
+    {
+        std::cout << "0 - Exit" << std::endl;
+        std::cout << "1 - Next" << std::endl;
+        std::cout << "2- Previous" << std::endl;
+
+        int choice;
+
+        std::cout << "Please enter your's choice: ";
+        std::cin >> choice;
+
+        // Clearing the input buffer
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+        switch (choice)
+        {
+        case 0:
+            return;
+        case 1:
+            MP.terminate();
+            break;
+        case 2:
+            prv();
+            break;
+        default:
+            std::cout << "Invalid input, please try again!" << std::endl;
+            break;
+        }
+    }
+}
+
+void MediaManagement::prv()
+{
+    if (MP.getRunning())
+    {
+        File *current_song = song_stack.top();
+        song_stack.pop();
+        File *prv_song = song_stack.top();
+        song_stack.pop();
+
+        song_queue.push(current_song);
+        song_queue.push(prv_song);
+
+        MP.terminate();
+    }
+    else
+    {
+        File *prv_song = song_stack.top();
+        song_stack.pop();
+        song_queue.push(prv_song);
+    }
 }

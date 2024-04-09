@@ -50,4 +50,5 @@ bool ActiveObject::isPaused()
 void ActiveObject::terminateMusic()
 {
     Mix_HaltMusic(); // Stop music playback
+    paused = false;
 }
