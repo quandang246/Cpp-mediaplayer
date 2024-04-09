@@ -10,6 +10,7 @@
 #include "../module/PlayList.hpp"
 #include "../module/FolderList.hpp"
 #include "musicPlayer.hpp"
+#include <stack>  
 
 namespace fs = std::filesystem;
 
@@ -19,6 +20,9 @@ private:
     musicPlayer MP;
     FolderList folderList;
     std::vector<PlayList> PlayLists;
+    std::thread queue_play;
+    std::queue<File*> song_queue;
+    std::stack<File*> song_stack;
 
 public:
     MediaManagement();
@@ -38,6 +42,8 @@ public:
     void view_all_PL();
     // Update playlist
     void update_PL();
+    // Play playlist
+    void play_PL(int index);
 
 
     //Folder function
@@ -48,8 +54,16 @@ public:
     // File function
     void view_file_MD();
     void update_file_MD();
-    void playingMusic();
     void control();
+    void playingMusic();
+    
+    // queue function
+    void playing_queue();
+    void next_prv();
+    void prv();
+
+    // volume
+    void volume();
 };
 
 #endif

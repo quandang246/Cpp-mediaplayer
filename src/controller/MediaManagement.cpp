@@ -2,6 +2,7 @@
 
 MediaManagement::MediaManagement(std::string path)
 {
+    queue_play = std::thread(&MediaManagement::playing_queue, this);
     std::filesystem::path programPath(path);
 
     folderList = FolderList(programPath);
@@ -14,6 +15,7 @@ MediaManagement::MediaManagement()
 
 MediaManagement::~MediaManagement()
 {
+    queue_play.join();
 }
 
 void MediaManagement::run()
@@ -30,6 +32,8 @@ void MediaManagement::run()
         std::cout << "7 - Update File's metadata" << std::endl;
         std::cout << "8 - Play music from a file path" << std::endl;
         std::cout << "9 - Enter playing control modes" << std::endl;
+        std::cout << "10 - Next/Previous " << std::endl;
+        std::cout << "11 - Adjust Volume" << std::endl;
 
         int choice;
         std::cout << "Please enter your's choice: ";
@@ -69,6 +73,12 @@ void MediaManagement::run()
             break;
         case 9:
             control();
+            break;
+        case 10:
+            next_prv();
+            break;
+        case 11:
+            volume();
             break;
         default:
             std::cout << "Invalid input, please try again!" << std::endl;
@@ -133,6 +143,7 @@ void MediaManagement::update_PL()
             std::cout << "1 - View Media files in playlist." << std::endl;
             std::cout << "2 - Add new file." << std::endl;
             std::cout << "3 - Remove file." << std::endl;
+            std::cout << "4 - Playing playlist." << std::endl;
 
             int choice;
             std::cout << "Please enter your's choice: ";
@@ -155,6 +166,9 @@ void MediaManagement::update_PL()
                 break;
             case 3:
                 edit_PL->removeFile();
+                break;
+            case 4:
+                play_PL(PL_id);
                 break;
             default:
                 std::cout << "Invalid input, please try again!" << std::endl;
@@ -324,22 +338,15 @@ void MediaManagement::update_file_MD()
 
 void MediaManagement::playingMusic()
 {
-    if (MP.getRunning() == false)
-    {
-        std::string filePathStr;
-        std::cout << "Please enter a file path: ";
-        std::getline(std::cin, filePathStr);
+    std::string filePathStr;
+    std::cout << "Please enter a file path: ";
+    std::getline(std::cin, filePathStr);
 
-        fs::path filePath = filePathStr;
+    fs::path filePath = filePathStr;
 
-        File *new_audio_file = new AudioFile(filePath);
+    File *new_audio_file = new AudioFile(filePath);
 
-        MP.play(filePathStr, new_audio_file->getDuration());
-    }
-    else
-    {
-        std::cout << "Something are already playing!" << std::endl;
-    }
+    song_queue.push(new_audio_file);
 }
 
 void MediaManagement::control()
@@ -347,3 +354,141 @@ void MediaManagement::control()
     MP.play_action();
 }
 
+void MediaManagement::playing_queue()
+{
+    while (true)
+    {
+        if (!MP.getRunning() && song_queue.size() != 0)
+        {
+            File *play_file = song_queue.front();
+
+            // std::cout << "Play " << play_file->get_filePath() << " - " << play_file->getDuration() << std::endl;
+
+            MP.play(play_file->get_filePath(), play_file->getDuration());
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+
+            song_stack.push(play_file);
+
+            song_queue.pop();
+        }
+    }
+}
+
+void MediaManagement::play_PL(int PL_id)
+{
+    for (int i = 0; i < PlayLists[PL_id].getCount(); i++)
+    {
+        song_queue.push(PlayLists[PL_id].files_ptr(i));
+    }
+    std::cout << "queue: " << song_queue.size() << std::endl;
+}
+
+void MediaManagement::next_prv()
+{
+    while (true)
+    {
+        std::cout << "0 - Exit" << std::endl;
+        std::cout << "1 - Next" << std::endl;
+        std::cout << "2- Previous" << std::endl;
+
+        int choice;
+
+        std::cout << "Please enter your's choice: ";
+        std::cin >> choice;
+
+        // Clearing the input buffer
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+        switch (choice)
+        {
+        case 0:
+            return;
+        case 1:
+            MP.terminate();
+            break;
+        case 2:
+            prv();
+            break;
+        default:
+            std::cout << "Invalid input, please try again!" << std::endl;
+            break;
+        }
+    }
+}
+
+void MediaManagement::prv()
+{
+    if (MP.getRunning())
+    {
+        File *current_song = song_stack.top();
+        song_stack.pop();
+        File *prv_song = song_stack.top();
+        song_stack.pop();
+
+        song_queue.push(current_song);
+        song_queue.push(prv_song);
+
+        MP.terminate();
+    }
+    else
+    {
+        File *prv_song = song_stack.top();
+        song_stack.pop();
+        song_queue.push(prv_song);
+    }
+}
+
+void MediaManagement::volume()
+{
+    while (true)
+    {
+        std::string command = "amixer -D pulse sset Master ";
+        std::string set_val;
+
+        std::cout << "0 - Exit" << std::endl;
+        std::cout << "1 - Mute" << std::endl;
+        std::cout << "2 - Unmute" << std::endl;
+        std::cout << "3- Set Volume" << std::endl;
+        std::cout << "4- Increase Volume" << std::endl;
+        std::cout << "5- Decrease Volume" << std::endl;
+
+        int choice;
+
+        std::cout << "Please enter your's choice: ";
+        std::cin >> choice;
+
+        // Clearing the input buffer
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+        switch (choice)
+        {
+        case 0:
+            return;
+        case 1:
+            command += "mute";
+            break;
+        case 2:
+        
+            command += "unmute";
+            break;
+        case 3:
+            std::cout << "Please enter value: ";
+            std::getline(std::cin, set_val);
+            command += set_val + "%";
+            break;
+        case 4:
+            command += "5%+";
+            break;
+        case 5:
+            command += "5%-";
+            break;
+        default:
+            std::cout << "Invalid input, please try again!" << std::endl;
+            break;
+        }
+
+        system(command.c_str());
+    }
+}
