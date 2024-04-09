@@ -41,7 +41,8 @@ public:
     // Update playlist
     void update_PL();
     // Play playlist
-    void play_PL(int PL_id);
+    void play_PL(int index);
+
 
     //Folder function
     // view all folderlist
