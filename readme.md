@@ -57,6 +57,22 @@ This is a CLI (Command Line Interface) application written in C++ for Linux syst
 
 - The application can be run from any directory on your computer or from an external USB device (ensure the device is mounted).
 
+### Note (using with usb)
+
+- First, you need to mount your usb int usb/ folder with following command:
+
+    ```bash
+    sudo mount -t drvfs usb_disk_name: path_to_usb_folder
+    sudo mount -t drvfs E: /home/quan246/projects/src/mock_prj/usb
+    ```
+
+- Last, you need to unmount your usb with following command:
+
+    ```bash
+    sudo umount path_to_usb_folder
+    sudo umount /home/quan246/projects/src/mock_prj/usb
+    ```
+
 ### Available Options
 
 1. **View List of Media Files**:
@@ -82,7 +98,7 @@ This is a CLI (Command Line Interface) application written in C++ for Linux syst
         - [x] Displays current time and duration of the song
 
 5. **Change Volume**:
-    - [ ] Adjust the volume of the device.
+    - [x] Adjust the volume of the device.
 
 ## Dependencies
 

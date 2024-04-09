@@ -33,6 +33,7 @@ void MediaManagement::run()
         std::cout << "8 - Play music from a file path" << std::endl;
         std::cout << "9 - Enter playing control modes" << std::endl;
         std::cout << "10 - Next/Previous " << std::endl;
+        std::cout << "11 - Adjust Volume" << std::endl;
 
         int choice;
         std::cout << "Please enter your's choice: ";
@@ -75,6 +76,9 @@ void MediaManagement::run()
             break;
         case 10:
             next_prv();
+            break;
+        case 11:
+            volume();
             break;
         default:
             std::cout << "Invalid input, please try again!" << std::endl;
@@ -432,5 +436,59 @@ void MediaManagement::prv()
         File *prv_song = song_stack.top();
         song_stack.pop();
         song_queue.push(prv_song);
+    }
+}
+
+void MediaManagement::volume()
+{
+    while (true)
+    {
+        std::string command = "amixer -D pulse sset Master ";
+        std::string set_val;
+
+        std::cout << "0 - Exit" << std::endl;
+        std::cout << "1 - Mute" << std::endl;
+        std::cout << "2 - Unmute" << std::endl;
+        std::cout << "3- Set Volume" << std::endl;
+        std::cout << "4- Increase Volume" << std::endl;
+        std::cout << "5- Decrease Volume" << std::endl;
+
+        int choice;
+
+        std::cout << "Please enter your's choice: ";
+        std::cin >> choice;
+
+        // Clearing the input buffer
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+        switch (choice)
+        {
+        case 0:
+            return;
+        case 1:
+            command += "mute";
+            break;
+        case 2:
+        
+            command += "unmute";
+            break;
+        case 3:
+            std::cout << "Please enter value: ";
+            std::getline(std::cin, set_val);
+            command += set_val + "%";
+            break;
+        case 4:
+            command += "5%+";
+            break;
+        case 5:
+            command += "5%-";
+            break;
+        default:
+            std::cout << "Invalid input, please try again!" << std::endl;
+            break;
+        }
+
+        system(command.c_str());
     }
 }

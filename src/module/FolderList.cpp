@@ -11,7 +11,8 @@ FolderList::~FolderList()
 FolderList::FolderList(const fs::path &directory)
 {
     file_count = 0;
-    for (const auto &entry : fs::recursive_directory_iterator(directory))
+    for (const auto &entry : fs::recursive_directory_iterator(directory,
+    std::filesystem::directory_options::skip_permission_denied))
     {
         if (fs::is_regular_file(entry.path()))
         {

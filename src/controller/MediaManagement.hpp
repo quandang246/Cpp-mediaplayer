@@ -61,6 +61,9 @@ public:
     void playing_queue();
     void next_prv();
     void prv();
+
+    // volume
+    void volume();
 };
 
 #endif
